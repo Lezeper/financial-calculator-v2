@@ -1,5 +1,5 @@
 # Financial Calculator
-This project is implemented for my personal demand of financial forecast. It's import to give a hands-up before getting into the financial trouble. I'm a big fan of financial management and investment, so I heavily rely on this calculator to predict and control my daily spending for achiving financial gold.
+This project is implemented for my personal demand of financial forecast. It's important to give a hands-up before getting into the financial trouble. I'm a big fan of financial management and investment, so I heavily rely on this calculator to predict and control my daily spending for achiving financial gold.
 ## Main Features
     * Mimic pending transaction process by given pending day.
     * Allow Credit Card use ARP 0 offer to pay the minimum payment only.
@@ -15,7 +15,6 @@ This project is implemented for my personal demand of financial forecast. It's i
     typegoose
     typescript
 ## REST Api (/rest)
-#### Financial Prediction (/finance)
     GET     /predict?endDate&forceCalAll
     GET     /accounts
     POST    /account
