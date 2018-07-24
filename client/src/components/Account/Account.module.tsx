@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table } from 'semantic-ui-react'
+import { Table, Dimmer, Loader } from 'semantic-ui-react'
 
 import { getAccountsNameIdMap, getAccounts, createAccount } from './Account.service';
 import AccountComponent from './Account.component';
@@ -15,7 +15,8 @@ export default class AccountModule extends React.Component {
     transactionTypes: [],
     paymentCategory: [],
     recurringPeriod: [],
-    accountsNameIdMap: new Map()
+    accountsNameIdMap: new Map(),
+    loading: true
   }
 
   componentDidMount() {
@@ -31,6 +32,7 @@ export default class AccountModule extends React.Component {
         transactionTypes: Utils.objectToOptions(Constant.transactionType),
         paymentCategory: Utils.objectToOptions(Constant.paymentCategory),
         recurringPeriod: Utils.objectToOptions(Constant.recurringPeriod),
+        loading: false
       });
     });
   }
@@ -47,6 +49,7 @@ export default class AccountModule extends React.Component {
   render() {
     return (
       <div>
+        <Dimmer page={true} active={this.state.loading}><Loader></Loader></Dimmer>
         <AccountComponent
           transactionTypes={this.state.transactionTypes}
           paymentCategory={this.state.paymentCategory}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Header, Button } from 'semantic-ui-react'
+import { Table, Header, Button, Dimmer, Loader } from 'semantic-ui-react'
 
 import { getRecurrings, getTransactions, createRecurring, createTransaction, deleteRecurring, deleteTransaction } from './Payment.service';
 import { getAccountsNameIdMap } from '../Account/Account.service';
@@ -20,7 +20,8 @@ export default class PaymentModule extends React.Component {
     transactionTypes: [],
     paymentCategory: [],
     recurringPeriod: [],
-    accountsNameIdMap: new Map()
+    accountsNameIdMap: new Map(),
+    loading: true
   }
 
   componentDidMount() {
@@ -36,7 +37,8 @@ export default class PaymentModule extends React.Component {
         accountsNameIdOptions: Utils.getAccountsNameIdOptions(res[2]),
         transactionTypes: Utils.objectToOptions(Constant.transactionType),
         paymentCategory: Utils.objectToOptions(Constant.paymentCategory),
-        recurringPeriod: Utils.objectToOptions(Constant.recurringPeriod)
+        recurringPeriod: Utils.objectToOptions(Constant.recurringPeriod),
+        loading: false
       });
     });
   }
@@ -58,6 +60,7 @@ export default class PaymentModule extends React.Component {
   render() {
     return (
       <div>
+        <Dimmer page={true} active={this.state.loading}><Loader></Loader></Dimmer>
         <TransactionComponent
           btnText="New Transaction"
           transactionTypes={this.state.transactionTypes}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Table, Header, Grid, Form, Icon } from 'semantic-ui-react';
+import { Table, Header, Grid, Form, Icon, Dimmer, Loader } from 'semantic-ui-react';
 import * as _ from 'lodash';
 
 import * as predictService from './Predict.service';
@@ -14,7 +14,8 @@ export default class PredictModule extends React.Component {
     statements: [],
     accountIdNameMap: new Map(),
     forceCalAll: false,
-    lowestBalanceAccounts: []
+    lowestBalanceAccounts: [],
+    loading: false
   }
 
   handleChange = (e, { name, value }) => {
@@ -29,6 +30,7 @@ export default class PredictModule extends React.Component {
   }
 
   predict = () => {
+    this.setState({loading: true});
     predictService.predict(this.state.endDate + '', this.state.forceCalAll)
       .then((report: Utils.PreditReport) => {
         let accountIdNameMap = new Map();
@@ -40,7 +42,8 @@ export default class PredictModule extends React.Component {
         this.setState({ 
           statements: report.statements, 
           accountIdNameMap, 
-          lowestBalanceAccounts: report.lowestBalanceAccounts 
+          lowestBalanceAccounts: report.lowestBalanceAccounts,
+          loading: false
         });
       });
   }
@@ -48,6 +51,7 @@ export default class PredictModule extends React.Component {
   render() {
     return (
       <Grid padded>
+        <Dimmer page={true} active={this.state.loading}><Loader></Loader></Dimmer>
         <Grid.Row columns={2}>
           <Grid.Column>
             <Form>

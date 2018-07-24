@@ -1,5 +1,3 @@
-import 'dotenv/config';
-
 const username = process.env.DB_USERNAME;
 const password = process.env.DB_PASSWORD;
 const hosting = process.env.DB_HOSTING;

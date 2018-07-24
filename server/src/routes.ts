@@ -9,6 +9,14 @@ import predict from './controllers/predict';
 const router = express.Router();
 
 export default (): express.Router => {
+  router.get('/token?', (req, res) => {
+    if(req.query.token === process.env.TOKEN) {
+      res.status(200).send();
+    } else {
+      res.status(401).send();
+    }
+  });
+
   router.get('/predict?', predict);
 
   router.get('/accounts', getAccounts);
