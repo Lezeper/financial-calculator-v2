@@ -67,6 +67,13 @@ export default class AccountComponent extends React.Component<any> {
   }
 
   render() {
+    let payByField = (
+      <Form.Field>
+        <label>Pay By Account</label>
+        <Dropdown placeholder="PayBy" fluid selection options={this.props.accountsNameIdOptions} name="payBy"
+          value={this.state.newAccount.payBy} onChange={this.handleChange} />
+      </Form.Field>
+    );
     return (
       <Modal trigger={<Button>New Account</Button>} closeOnDimmerClick={false}>
         <Modal.Header>Add a account</Modal.Header>
@@ -93,6 +100,9 @@ export default class AccountComponent extends React.Component<any> {
                 <Form.Input type="number" steps="2" placeholder="Account Balance" name="balance" required
                   value={this.state.newAccount.balance} onChange={this.handleChange} />
               </Form.Field>
+              {
+                this.state.newAccount.type === Constant.accountType.gc ? payByField: null
+              }
 
               {
                 this.state.newAccount.type === Constant.accountType.cc ? (
@@ -127,11 +137,7 @@ export default class AccountComponent extends React.Component<any> {
                       <Form.Input type="number" placeholder="Last Statement Balance" name="minPayment"
                         value={this.state.newAccount.minPayment} onChange={this.handleChange} />
                     </Form.Field>
-                    <Form.Field>
-                      <label>Pay By Account</label>
-                      <Dropdown placeholder="PayBy" fluid selection options={this.props.accountsNameIdOptions} name="payBy"
-                        value={this.state.newAccount.payBy} onChange={this.handleChange} />
-                    </Form.Field>
+                    {payByField}
                     <Form.Field>
                       <label>Use APR 0 offer?</label>
                       <Form.Checkbox onChange={this.apr0Change} checked={this.state.apr0Valid}/>

@@ -1,6 +1,9 @@
 export default {
-  PendingDay: 2, // normal pending day for transaction
-  PaymentPendingDay: 1,
+  pendingDay: {
+    cashEquiv: 0,
+    normal: 2, // normal pending day for transaction
+    ccPayment: 1
+  },
   transactionType: {
     debit: 'Debit',
     credit: 'Credit'

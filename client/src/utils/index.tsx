@@ -72,5 +72,5 @@ export const getTranFlow = (payById: string, payToId: string, transactionType: s
 }
 
 export const currencyColFormat = (val: number) => {
-  return val > 0 ? `$${val.toFixed(2)}` : `-$${val.toFixed(2).substring(1)}`;
+  return val >= 0 ? `$${val.toFixed(2)}` : `-$${val.toFixed(2).substring(1)}`;
 }

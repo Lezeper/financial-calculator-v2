@@ -36,11 +36,11 @@ const deleteChanged = (map: Map<string, Account>): void => {
   }
 }
 
-const getPendingDay = (category: string): number => {
-  if (category === Constant.paymentCategory.ccPayment) {
-    return 1;
+const getPendingDayByAccount = (account: Account): number => {
+  if (account.type === Constant.accountType.cc) {
+    return Constant.pendingDay.cashEquiv;
   }
-  return Constant.PaymentPendingDay;
+  return Constant.pendingDay.normal;
 }
 
 const getOppositeTranType = (transaction: Transaction) => {
@@ -53,10 +53,10 @@ const isAccountsTrouble = (accounts: Map<string, Account>, additional: AccountAd
   if(additional.financialTrouble === true) return;
 
   accounts.forEach((v, k) => {
-    if (v.type === Constant.accountType.cc && v.balance > v.creditLine) {
-      additional.financialTrouble = true; return;
-    } else if (v.type === Constant.accountType.gc && _.isNil(v.payBy)) {
-      additional.financialTrouble = true; return;
+    if (v.type === Constant.accountType.cc) {
+      additional.financialTrouble = v.balance > v.creditLine; return;
+    } else if (v.type === Constant.accountType.gc) {
+      additional.financialTrouble = _.isNil(v.payBy); return;
     } else if (v.balance < 0) {
       additional.financialTrouble = true; return;
     }
@@ -163,25 +163,25 @@ const applyTransaction = (account: Account, transaction: Transaction, additional
   }
 }
 
-const checkForGC = (accounts: Map<string, Account>, account: Account, transaction: Transaction, additional: AccountAddi) => {
+const handleNegGC = (accounts: Map<string, Account>, account: Account, transaction: Transaction, additional: AccountAddi) => {
   // if gift card run out of balance, then use backup account to pay
-  if (account.type === Constant.accountType.gc && account.balance < 0) {
-    let payExtra = Utils.copy(account.balance * -1);
-    // transaction.amount = transaction.amount - payExtra;
-    account.balance = 0;
-    let newExtraTransaction: Transaction = new Transaction({
-      date: additional.currentDay,
-      amount: payExtra,
-      category: transaction.category,
-      description: transaction.description,
-      type: transaction.type,
-      payBy: account.payBy,
-      pendingDay: getPendingDay(transaction.category)
-    });
-    let backupAccount = accounts.get(account.payBy);
-    if (_.isNil(backupAccount)) console.error('no backupAccount for GC');
-    else applyTransaction(backupAccount, newExtraTransaction, additional);
-  }
+  let payExtra = Utils.copy(account.balance * -1);
+  // transaction.amount = transaction.amount - payExtra;
+  account.balance = 0;
+  let backupAccount = accounts.get(account.payBy);
+  let newExtraTransaction: Transaction = new Transaction({
+    date: additional.currentDay,
+    amount: payExtra,
+    category: transaction.category,
+    description: transaction.description + ' Pay Extra',
+    type: transaction.type,
+    payBy: account.payBy,
+    pendingDay: getPendingDayByAccount(backupAccount)
+  });
+  if (_.isNil(backupAccount)) console.error('no backupAccount for GC');
+  else applyTransaction(backupAccount, newExtraTransaction, additional);
+
+  additional.currentTransactions.push(newExtraTransaction);
 }
 
 const updateBalance = (account: Account, transaction: Transaction, additional: AccountAddi): void => {
@@ -242,9 +242,12 @@ const getAccountsToApplyTran = (accounts: Map<string, Account>, payByAccStr: str
     if (payToAccount) {
       applyTransaction(payToAccount, new Transaction({ ...Utils.spreadModel(transaction), type: getOppositeTranType(transaction) }), additional);
     }
-    // check for GC
-    // checkForGC(accounts, payByAccount, transaction, additional);
-    additional.currentTransactions.push(new Transaction({ ...Utils.spreadModel(transaction), date: additional.currentDay }));
+    // handle GC backup payment acocunt
+    if(payByAccount.type === Constant.accountType.gc && payByAccount.balance <= 0) {
+      handleNegGC(accounts, payByAccount, transaction, additional);
+    } else {
+      additional.currentTransactions.push(new Transaction({ ...Utils.spreadModel(transaction), date: additional.currentDay }));
+    }
   }
 }
 

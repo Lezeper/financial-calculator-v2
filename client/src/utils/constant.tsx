@@ -1,5 +1,5 @@
 export default {
-  restURL: 'http://localhost:8123/rest',
+  restURL: 'http://localhost:8321/rest',
   pendingDay: 2, // normal pending day for transaction
   paymentPendingDay: 1,
   transactionType: {
