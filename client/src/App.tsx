@@ -39,19 +39,19 @@ class App extends React.Component {
                   borderRadius: 0, // clear semantic-ui style
                   margin: 0 // clear semantic-ui style
                 }}>
-                <Menu.Item as={NavLink} to="/account/">
+                <Menu.Item as={NavLink} to="/account">
                   <Icon name="money" />
                         Accounts
                 </Menu.Item>
-                      <Menu.Item as={NavLink} to="/payment/">
+                      <Menu.Item as={NavLink} to="/payment">
                         <Icon name="payment" />
                         Payments
                 </Menu.Item>
-                      <Menu.Item as={NavLink} to="/predict/">
+                      <Menu.Item as={NavLink} to="/predict">
                         <Icon name="calculator" />
                         Calculator
                 </Menu.Item>
-                      <Menu.Item as={NavLink} to="/settings/">
+                      <Menu.Item as={NavLink} to="/settings">
                         <Icon name="settings" />
                         Settings
                 </Menu.Item>

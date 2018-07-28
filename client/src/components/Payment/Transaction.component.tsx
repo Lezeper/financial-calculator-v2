@@ -91,8 +91,10 @@ export default class TransactionComponent extends React.Component<any> {
               </Form.Field>
               <Form.Field>
                 {
-                  this.props.readOnly ? null :
-                    <Form.Button content="Submit" onClick={this.onSubmit} />
+                  this.props.readOnly ? null : <Form.Button content="Submit" onClick={this.onSubmit} />
+                }
+                {
+                  this.props.onDelete ? <Form.Button negative content="Delete" onClick={()=>this.props.onDelete(this.props.pi)} /> : null
                 }
                 <Form.Button content="Cancel" onClick={this.closeModal} />
               </Form.Field>

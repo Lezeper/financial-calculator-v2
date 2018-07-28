@@ -50,3 +50,17 @@ export const createAccount = (account: AccountModel) => {
       return res;
     });
 }
+
+export const updateAccount = (account: AccountModel) => {
+  return axios.put(`${Constant.restURL}/account`, account)
+    .then(res => {
+      return res;
+    });
+}
+
+export const deleteAccount = (id: any) => {
+  return axios.delete(`${Constant.restURL}/account/${id}`)
+    .then(res => {
+      return res;
+    });
+}

@@ -7,6 +7,9 @@ This project is implemented for my personal demand of financial forecast. It's i
     * Showing the lowest balance of each Checking/Savings account in period.
     * Showing each payment/transaction activity as report.
     * ...
+## TODO
+    * Auto apply transaction thru API
+    * Timeline
 ## Main Library
     React
     Semantic UI

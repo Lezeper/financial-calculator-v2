@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Button, Modal, Form, Dropdown } from "semantic-ui-react";
+import * as _ from 'lodash';
 
 import Constant from "../../utils/constant";
 
@@ -9,8 +10,7 @@ import TransactionComponent from '../Payment/Transaction.component';
 
 export default class AccountComponent extends React.Component<any> {
   state = {
-    newAccount: new AccountModel(),
-    apr0Valid: false
+    newAccount: new AccountModel()
   }
   private accountTypes = [
     { key: Constant.accountType.savings, text: Constant.accountType.savings, value: Constant.accountType.savings },
@@ -20,14 +20,14 @@ export default class AccountComponent extends React.Component<any> {
   ];
 
   apr0Change = () => {
-    let apr0Valid = !this.state.apr0Valid;
     let newAccount = this.state.newAccount;
-    if(apr0Valid) {
+    if(_.isNil(newAccount.apr0Date)) {
       newAccount.apr0Date = { startDate: '', endDate: '' };
     } else {
-      delete newAccount.apr0Date;
+      newAccount.apr0Date = null;
     }
-    this.setState({newAccount, apr0Valid});
+    
+    this.setState({newAccount});
   }
 
   updateApr0StartDate = (e, { value }) => {
@@ -66,6 +66,20 @@ export default class AccountComponent extends React.Component<any> {
     this.setState({newAccount});
   }
 
+  openModal = () => {
+    console.log(this.props)
+    if(!_.isNil(this.props.account)) {
+      this.setState({newAccount: this.props.account});
+    }
+  }
+
+  onDeletePending = (i: number) => {
+    let newAccount: AccountModel = this.state.newAccount;
+    newAccount.pendingTransactions!.splice(i, 1);
+    this.setState({newAccount});
+    console.log(newAccount.pendingTransactions)
+  }
+
   render() {
     let payByField = (
       <Form.Field>
@@ -75,8 +89,8 @@ export default class AccountComponent extends React.Component<any> {
       </Form.Field>
     );
     return (
-      <Modal trigger={<Button>New Account</Button>} closeOnDimmerClick={false}>
-        <Modal.Header>Add a account</Modal.Header>
+      <Modal trigger={<Button circular={this.props.isCircular} icon={this.props.iconName} onClick={this.openModal}>{this.props.iconName ? null : 'New Account'}</Button>} closeOnDimmerClick={false}>
+        <Modal.Header>{this.props.headerText}</Modal.Header>
         <Modal.Content>
           <Modal.Description>
             <Form>
@@ -140,10 +154,10 @@ export default class AccountComponent extends React.Component<any> {
                     {payByField}
                     <Form.Field>
                       <label>Use APR 0 offer?</label>
-                      <Form.Checkbox onChange={this.apr0Change} checked={this.state.apr0Valid}/>
+                      <Form.Checkbox onChange={this.apr0Change} checked={!_.isNil(this.state.newAccount.apr0Date)}/>
                     </Form.Field>
                     {
-                      this.state.apr0Valid ? (
+                      !_.isNil(this.state.newAccount.apr0Date) ? (
                         <React.Fragment>
                           <Form.Field>
                             <label>APR 0 Start Date</label>
@@ -173,12 +187,14 @@ export default class AccountComponent extends React.Component<any> {
                         this.state.newAccount.pendingTransactions!.map((pTransaction: TransactionModel, i: number) => 
                           <TransactionComponent
                             key={i}
+                            pi={i}
                             readOnly={true}
                             btnText={pTransaction.description}
                             transaction={pTransaction}
                             transactionTypes={this.props.transactionTypes}
                             paymentCategory={this.props.paymentCategory}
                             accountsNameIdOptions={this.props.accountsNameIdOptions}
+                            onDelete={this.onDeletePending}
                             onSubmit={this.onPendingTransactionSubmit}></TransactionComponent>
                         ) : null
                       }

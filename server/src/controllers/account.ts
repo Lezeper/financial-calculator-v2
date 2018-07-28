@@ -9,7 +9,7 @@ export const createAccount = async (req, res) => {
 }
 
 export const updateAccount = async(req, res) => {
-  res.json(await AccountModel.findByIdAndUpdate(req.body._id, {...req.body}));
+  res.json(await AccountModel.findByIdAndUpdate(req.body._id, new AccountModel({...req.body})));
 }
 
 export const deleteAccount = async(req, res) => {

@@ -15,7 +15,7 @@ export default class Account {
   dueDate?: moment.Moment | Date | string = moment().format(Constant.datepickerFormat);
   closingDate?: moment.Moment | Date | string = moment().format(Constant.datepickerFormat);
   creditLine?: number = 0;
-  apr0Date?: { startDate: moment.Moment | Date | string, endDate: moment.Moment | Date | string }
+  apr0Date?: { startDate: moment.Moment | Date | string, endDate: moment.Moment | Date | string } | null | undefined;
   lastStatementBalance?: number = 0;
   avaliableBalance? : number = 0;
   minPayment?: number = 0;
