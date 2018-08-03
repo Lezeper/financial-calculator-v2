@@ -21,6 +21,7 @@ export default (): express.Router => {
   router.get('/predict?', predict);
 
   router.get('/plaid/account?', Plaid.getAccount);
+  router.get('/plaid/syncup-all', Plaid.syncUpAll);
 
   router.get('/accounts', getAccounts);
   router.post('/account', createAccount);

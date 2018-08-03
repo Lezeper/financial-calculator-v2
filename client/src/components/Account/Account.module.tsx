@@ -69,6 +69,13 @@ export default class AccountModule extends React.Component {
     });
   }
 
+  syncupAllAccount = () => {
+    this.setState({loading: true});
+    AccountService.syncUpAllAccount().then(res => {
+      this.setState({redirectTo: '/'});
+    });
+  }
+
   render() {
     return (
       this.state.redirectTo ? this.onRedirect() :
@@ -83,6 +90,7 @@ export default class AccountModule extends React.Component {
             headerText={'Add a account'}
             onSubmit={this.onSubmit}>
           </AccountComponent>
+          <Button onClick={this.syncupAllAccount}>Syncup All Account</Button>
           <Table celled>
             <Table.Header>
               <Table.Row>

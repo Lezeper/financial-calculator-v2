@@ -33,3 +33,29 @@ export const getAccount = async (req, res) => {
     res.status(500).send('account id or mask not given');
   }
 }
+
+export const syncUpAll = async (req, res) => {
+  const _accounts = await AccountModel.find({ type: { $ne: "gc" }});
+    for(let i = 0; i < _accounts.length; i++) {
+      if(!_.isNil(_accounts[i].accessToken)) {
+        try {
+          await plaidClient.getAccounts(_accounts[i].accessToken, async(err, {accounts}) => {
+            if(err) return res.status(500).send(err);
+            
+            for(let j = 0; j < accounts.length; j++) {
+              if(_accounts[i].mask == accounts[j].mask) {
+                _accounts[i].balance = accounts[j].balances.current;
+                _accounts[i].avaliableBalance = accounts[j].balances.available;
+                _accounts[i].creditLine = accounts[j].balances.limit;
+                await _accounts[i].save();
+                break;
+              }
+            }
+          });
+        } catch(err) {
+          res.status(500).send(err);
+        }
+      }
+    }
+  res.json();
+}

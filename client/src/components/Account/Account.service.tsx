@@ -71,3 +71,10 @@ export const syncUpAccount = (id: any, mask: string) => {
       return data;
     });
 }
+
+export const syncUpAllAccount = () => {
+  return axios.get(`${Constant.restURL}/plaid/syncup-all`)
+    .then((res) => {
+      return res;
+    });
+}
