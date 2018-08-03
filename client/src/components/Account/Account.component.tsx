@@ -5,12 +5,14 @@ import * as _ from 'lodash';
 import Constant from "../../utils/constant";
 
 import AccountModel from "./Account.model";
+import * as AccountService from './Account.service';
 import TransactionModel from '../Payment/Transaction.model';
 import TransactionComponent from '../Payment/Transaction.component';
 
 export default class AccountComponent extends React.Component<any> {
   state = {
-    newAccount: new AccountModel()
+    newAccount: new AccountModel(),
+    isUpdate: false
   }
   private accountTypes = [
     { key: Constant.accountType.savings, text: Constant.accountType.savings, value: Constant.accountType.savings },
@@ -67,9 +69,10 @@ export default class AccountComponent extends React.Component<any> {
   }
 
   openModal = () => {
-    console.log(this.props)
     if(!_.isNil(this.props.account)) {
-      this.setState({newAccount: this.props.account});
+      this.setState({newAccount: this.props.account, isUpdate: true});
+    } else {
+      this.setState({isUpdate: false});
     }
   }
 
@@ -78,6 +81,18 @@ export default class AccountComponent extends React.Component<any> {
     newAccount.pendingTransactions!.splice(i, 1);
     this.setState({newAccount});
     console.log(newAccount.pendingTransactions)
+  }
+
+  syncUpAccount = () => {
+    AccountService.syncUpAccount(this.state.newAccount._id, this.state.newAccount.mask).then(res => {
+      console.log(res, this.state.newAccount)
+      this.setState({newAccount: {
+        ...this.state.newAccount, 
+        balance: res.balances.current, 
+        avaliableBalance: res.balances.available,
+        creditLine: res.balances.limit
+      }});
+    });
   }
 
   render() {
@@ -93,6 +108,9 @@ export default class AccountComponent extends React.Component<any> {
         <Modal.Header>{this.props.headerText}</Modal.Header>
         <Modal.Content>
           <Modal.Description>
+            {
+              this.state.isUpdate && this.state.newAccount.type !== Constant.accountType.gc ? <Button onClick={this.syncUpAccount}>Sync up</Button> : null
+            }
             <Form>
               <Form.Field>
                 <label>Account Name</label>
@@ -100,9 +118,9 @@ export default class AccountComponent extends React.Component<any> {
                   value={this.state.newAccount.accountName} onChange={this.handleChange} autoComplete="off"/>
               </Form.Field>
               <Form.Field>
-                <label>last4Num</label>
-                <Form.Input type="number" placeholder="Account last4Num" name="last4Num" required
-                  value={this.state.newAccount.last4Num} onChange={this.handleChange} />
+                <label>Mask</label>
+                <Form.Input type="text" placeholder="Account mask" name="mask" required
+                  value={this.state.newAccount.mask} onChange={this.handleChange} />
               </Form.Field>
               <Form.Field>
                 <label>Type</label>

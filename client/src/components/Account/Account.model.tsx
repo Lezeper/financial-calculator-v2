@@ -6,7 +6,7 @@ import TransactionModel from '../Payment/Transaction.model';
 export default class Account {
   _id?: string;
   type: string = '';
-  last4Num: number = 0;
+  mask: string = '';
   accountName: string = '';
   updatedDate: moment.Moment | Date | string = '';
   order: number = 0;

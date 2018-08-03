@@ -64,3 +64,10 @@ export const deleteAccount = (id: any) => {
       return res;
     });
 }
+
+export const syncUpAccount = (id: any, mask: string) => {
+  return axios.get(`${Constant.restURL}/plaid/account?id=${id}&mask=${mask}`)
+    .then(({data}) => {
+      return data;
+    });
+}

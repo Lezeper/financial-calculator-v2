@@ -10,7 +10,7 @@ export class Account extends Typegoose {
   @prop({ required: true })
   type: string;
   @prop({ required: true })
-  last4Num: number;
+  mask: string;
   @prop({ required: true })
   accountName: string;
   @prop({ required: true })
@@ -40,6 +40,8 @@ export class Account extends Typegoose {
   pendingTransactions?: Array<Transaction>;
   @prop()
   changed?: number;
+  @prop()
+  accessToken: string;
 
   constructor(obj: any = {}) {
     super();
@@ -51,7 +53,7 @@ export class Account extends Typegoose {
 
     this._id = obj._id;
     this.type = obj.type;
-    this.last4Num = obj.last4Num;
+    this.mask = obj.mask;
     this.accountName = obj.accountName;
     this.updatedDate = dateFormat(obj.updatedDate);
     this.order = obj.order;
@@ -61,6 +63,7 @@ export class Account extends Typegoose {
     this.avaliableBalance = obj.avaliableBalance;
     this.minPayment = obj.minPayment;
     this.payBy = obj.payBy;
+    this.accessToken = obj.accessToken;
 
     if(obj.pendingTransactions && obj.pendingTransactions.length > 0) {
       this.pendingTransactions.push(new Transaction(obj.pendingTransactions));

@@ -1,4 +1,4 @@
-require('dotenv').config({path: __dirname + '/.env'});
+require('dotenv').config({path: __dirname + '/../.env'});
 import app from './app';
 
 const port = process.env.PORT || 8321

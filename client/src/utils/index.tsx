@@ -50,7 +50,7 @@ export const dateDisplay = (date: any, format: string = Constant.dateDisplayForm
 }
 
 export const getAccountName = (account: AccountModel) => {
-  return `${account.accountName}(${account.last4Num})`;
+  return `${account.accountName}(${account.mask})`;
 }
 
 export const getAccountsNameIdOptions = (accountsNameIdMap) => {

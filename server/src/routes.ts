@@ -5,6 +5,7 @@ import { getAccounts, createAccount, updateAccount, deleteAccount } from './cont
 import { getTransactions, createTransaction, updateTransaction, deleteTransaction } from './controllers/transaction';
 import { getRecurrings, createRecurring, updateRecurring, deleteRecurring } from './controllers/recurring';
 import predict from './controllers/predict';
+import * as Plaid from './controllers/plaid';
 
 const router = express.Router();
 
@@ -18,6 +19,8 @@ export default (): express.Router => {
   });
 
   router.get('/predict?', predict);
+
+  router.get('/plaid/account?', Plaid.getAccount);
 
   router.get('/accounts', getAccounts);
   router.post('/account', createAccount);
