@@ -26,8 +26,8 @@ type Statement = {
   accounts: Account[]
 }
 
-const weekOfMonth = (m) => {
-  return m.week() - moment(m).startOf('month').week() + 1;
+const isBiweekly = (currentDate: moment.Moment, recurringPayment: Recurring) => {
+  return currentDate.diff(Utils.dateFormat(recurringPayment.startDate), 'day') % 14 === 0;
 }
 
 const deleteChanged = (map: Map<string, Account>): void => {
@@ -221,7 +221,7 @@ const isPayRecurringDate = (currentDate: moment.Moment, recurringPayment: Recurr
     }
   }
   if (recurringPayment.recurringPeriod === Constant.recurringPeriod.biWeek) {
-    if (recurringPayment.recurringDay === currentDate.format('dddd') && (weekOfMonth(currentDate) % 2 === 1)
+    if (recurringPayment.recurringDay === currentDate.format('dddd') && (isBiweekly(currentDate, recurringPayment))
       && Utils.isTargetDateBetween(recurringPayment.startDate, recurringPayment.endDate, currentDate)) {
       return true;
     }
